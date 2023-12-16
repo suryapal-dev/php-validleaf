@@ -1,0 +1,45 @@
+{
+    "name": "surdev/php-validleaf",
+    "description": "ValidLeaf is a package to validate given input based upon the type. It is for PHP projects, created with PHP.",
+    "type": "library",
+    "version": "1.0.0",
+    "license": "BSD-2-Clause",
+    "homepage": "https://github.com/surdev/php-validleaf",
+    "authors": [
+        {
+            "role": "Developer",
+            "name": "Suryapal Rao",
+            "email": "suryapal.dev@gmail.com",
+            "homepage": "https://github.com/surdev"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Surdev\\ValidLeaf\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Surdev\\ValidLeaf\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "pest"
+    },
+    "require": {
+        "php": "^8.2"
+    },
+    "require-dev": {
+        "pestphp/pest": "^1.21",
+        "symfony/var-dumper": "^6.0"
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
