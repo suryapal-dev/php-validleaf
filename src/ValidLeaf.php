@@ -14,6 +14,7 @@ final class ValidLeaf
     {
         if (!self::$validator) {
             self::$validator = new Validator();
+            self::$validator->registerPredefinedRules();
         }
         return self::$validator->{$name}(...$arguments);
     }
