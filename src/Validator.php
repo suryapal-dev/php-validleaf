@@ -13,7 +13,9 @@ use SuryaByte\ValidLeaf\Exceptions\ArgumentRequiredForMethodException;
 use SuryaByte\ValidLeaf\Exceptions\ShouldValidateArgumentTypeException;
 use SuryaByte\ValidLeaf\Exceptions\SetArgumentMethodNotFoundException;
 use SuryaByte\ValidLeaf\Exceptions\ValidationException;
-use Exception;
+use SuryaByte\ValidLeaf\Exceptions\UndefinedLevelPassedException;
+use SuryaByte\ValidLeaf\Exceptions\MultipleValidationException;
+use SuryaByte\ValidLeaf\Enums\ResponseLevel;
 
 final class Validator
 {
@@ -26,6 +28,16 @@ final class Validator
      * @var array
      */
     private array $rulesToValidate = [];
+
+    /**
+     * @var string
+     */
+    private string $responseLevel = ResponseLevel::ONLY_BOOLEAN->value;
+
+    /**
+     * @var ?string
+     */
+    private ?string $tempResponseLevel = null;
 
     /**
      * @param   string  $name
@@ -137,12 +149,50 @@ final class Validator
      */
     public function validate(mixed $value): bool
     {
+        $errors = [];
+        $levelCheck = $this->tempResponseLevel ?? $this->responseLevel;
         foreach ($this->rulesToValidate as $rule) {
             if (!$rule->validate($value)) {
-                $rule->getError();
+                $this->tempResponseLevel = null;
+                switch ($levelCheck) {
+                    case ResponseLevel::ONLY_BOOLEAN->value:
+                        return false;
+                    case ResponseLevel::THROW_ERROR_ON_FIRST_FALSE->value:
+                        return $rule->getError();
+                    case ResponseLevel::THROW_ALL_ERRORS->value:
+                        $errors[] = $rule->getErrorMessage();
+                        break;
+                    default:
+                        return false;
+                }
             }
         }
+        if (count($errors)) {
+            throw new MultipleValidationException($errors);
+        }
         return true;
+    }
+
+    /**
+     * @param   \SuryaByte\ValidLeaf\Enums\ResponseLevel  $level
+     * 
+     * @return  self
+     */
+    public function setResponseLevel(ResponseLevel $level): self
+    {
+        $this->responseLevel = $level->value;
+        return $this;
+    }
+
+    /**
+     * @param   \SuryaByte\ValidLeaf\Enums\ResponseLevel  $level
+     * 
+     * @return  self
+     */
+    public function setTemporaryResponseLevel(ResponseLevel $level): self
+    {
+        $this->tempResponseLevel = $level->value;
+        return $this;
     }
 
     /**

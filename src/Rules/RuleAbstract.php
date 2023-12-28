@@ -18,13 +18,13 @@ abstract class RuleAbstract
 	/**
 	 * @return	string
 	 */
-	abstract public function setErrorMessage(): string;
+	abstract public function getErrorMessage(): string;
 
 	/**
 	 * @throws \SuryaByte\ValidLeaf\Exceptions\ValidationException
 	 */
     public function getError(): ValidationException
     {
-        throw new ValidationException($this->setErrorMessage());
+        throw new ValidationException($this->getErrorMessage());
     }
 }

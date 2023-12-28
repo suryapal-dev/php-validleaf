@@ -17,7 +17,7 @@ class EmailRule extends RuleAbstract
     /**
      * @inheritdoc
      */
-    public function setErrorMessage(): string
+    public function getErrorMessage(): string
     {
         return 'The value is not a valid email address.';
     }
