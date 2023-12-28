@@ -11,6 +11,7 @@ use SuryaByte\ValidLeaf\Exceptions\RuleAlreadyExistedException;
 use SuryaByte\ValidLeaf\Exceptions\MethodNoArgumentNeededException;
 use SuryaByte\ValidLeaf\Exceptions\ArgumentRequiredForMethodException;
 use SuryaByte\ValidLeaf\Exceptions\ShouldValidateArgumentTypeException;
+use SuryaByte\ValidLeaf\Exceptions\SetArgumentMethodNotFoundException;
 use Exception;
 
 final class Validator
@@ -118,7 +119,7 @@ final class Validator
             if (count($arguments)) {
                 $arguments = $this->arrangeRuleArguments($name, $rule['arguments'], $arguments);
                 if (!method_exists($ruleClass, 'setArguments')) {
-                    throw new Exception("$name class does not contain setArgument method, if you are working with extra arguments, you can apply these method. For more context, check the documentation.");
+                    throw new SetArgumentMethodNotFoundException($name);
                 }
                 $ruleClass->setArguments(...$arguments);
             }
