@@ -11,13 +11,13 @@ class EmailRule extends RuleAbstract
      */
 	public function validate(mixed $value): bool
     {
-        return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
+        return false !== filter_var($value, FILTER_VALIDATE_EMAIL);
     }
 
     /**
      * @inheritdoc
      */
-    public static function setErrorMessage(): string
+    public function setErrorMessage(): string
     {
         return 'The value is not a valid email address.';
     }

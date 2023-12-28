@@ -139,7 +139,7 @@ final class Validator
     {
         foreach ($this->rulesToValidate as $rule) {
             if (!$rule->validate($value)) {
-                return $rule::getError();
+                $rule->getError();
             }
         }
         return true;
