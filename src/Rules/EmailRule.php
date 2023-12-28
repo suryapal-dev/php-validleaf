@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace SuryaByte\ValidLeaf\Rules;
 
-use SuryaByte\ValidLeaf\Rules\Interfaces\RuleInterface;
-
-class EmailRule implements RuleInterface
+class EmailRule extends RuleAbstract
 {
-	public function validate($value): bool
+    /**
+     * @inheritdoc
+     */
+	public function validate(mixed $value): bool
     {
-        return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
+        return false !== filter_var($value, FILTER_VALIDATE_EMAIL);
     }
 
-    public function getError(): string
+    /**
+     * @inheritdoc
+     */
+    public function setErrorMessage(): string
     {
         return 'The value is not a valid email address.';
     }

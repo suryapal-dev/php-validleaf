@@ -8,9 +8,18 @@ use Exception;
 
 final class ValidLeaf
 {
+    /**
+     * @var ?\SuryaByte\ValidLeaf\Validator
+     */
     private static $validator;
 
-    public static function __callStatic($name, $arguments)
+    /**
+     * @param   string  $name
+     * @param   array   $arguments
+     * 
+     * @return  \SuryaByte\ValidLeaf\Validator
+     */
+    public static function __callStatic(string $name, array $arguments): Validator
     {
         if (!self::$validator) {
             self::$validator = new Validator();
