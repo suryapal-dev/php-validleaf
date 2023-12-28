@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace SuryaByte\ValidLeaf\Rules;
 
-use SuryaByte\ValidLeaf\Rules\Interfaces\RuleInterface;
-use SuryaByte\ValidLeaf\Exceptions\ValidationException;
-
-class EmailRule implements RuleInterface
+class EmailRule extends RuleAbstract
 {
     /**
      * @inheritdoc
@@ -20,8 +17,8 @@ class EmailRule implements RuleInterface
     /**
      * @inheritdoc
      */
-    public function getError(): ValidationException
+    public static function setErrorMessage(): string
     {
-        throw new ValidationException('The value is not a valid email address.');
+        return 'The value is not a valid email address.';
     }
 }

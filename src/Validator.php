@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SuryaByte\ValidLeaf;
 
-use SuryaByte\ValidLeaf\Rules\Interfaces\RuleInterface;
+use SuryaByte\ValidLeaf\Rules\RuleAbstract;
 use SuryaByte\ValidLeaf\Rules\EmailRule;
 use SuryaByte\ValidLeaf\Exceptions\RuleNotFoundException;
 use SuryaByte\ValidLeaf\Exceptions\RuleAlreadyExistedException;
@@ -42,14 +42,14 @@ final class Validator
     }
 
     /**
-     * @param   string                                              $ruleName
-     * @param   \SuryaByte\ValidLeaf\Rules\Interfaces\RuleInterface $ruleClass
-     * @param   array                                               $arguments
+     * @param   string                                  $ruleName
+     * @param   \SuryaByte\ValidLeaf\Rules\RuleAbstract $ruleClass
+     * @param   array                                   $arguments
      * 
      * @return  void
      * @throws  \Exception
      */
-    public function addRule(string $ruleName, RuleInterface $ruleClass, array $arguments = []): void
+    public function addRule(string $ruleName, RuleAbstract $ruleClass, array $arguments = []): void
     {
         if ($this->rules[$ruleName] ?? null) {
             throw new RuleAlreadyExistedException($ruleName);
@@ -114,7 +114,7 @@ final class Validator
         if (true === $shouldValidate) {
             $rule = $this->getSavedRule($name);
             /**
-             * @var \SuryaByte\ValidLeaf\Rules\Interfaces\RuleInterface
+             * @var \SuryaByte\ValidLeaf\Rules\RuleAbstract
              */  
             $ruleClass = $rule['class'];
             if (count($arguments)) {
@@ -139,7 +139,7 @@ final class Validator
     {
         foreach ($this->rulesToValidate as $rule) {
             if (!$rule->validate($value)) {
-                return $rule->getError();
+                return $rule::getError();
             }
         }
         return true;
