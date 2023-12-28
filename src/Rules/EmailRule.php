@@ -8,7 +8,7 @@ use SuryaByte\ValidLeaf\Rules\Interfaces\RuleInterface;
 
 class EmailRule implements RuleInterface
 {
-	public function validate(string|array|null|int|float $value): bool
+	public function validate($value): bool
     {
         return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
     }
