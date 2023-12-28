@@ -12,6 +12,7 @@ use SuryaByte\ValidLeaf\Exceptions\MethodNoArgumentNeededException;
 use SuryaByte\ValidLeaf\Exceptions\ArgumentRequiredForMethodException;
 use SuryaByte\ValidLeaf\Exceptions\ShouldValidateArgumentTypeException;
 use SuryaByte\ValidLeaf\Exceptions\SetArgumentMethodNotFoundException;
+use SuryaByte\ValidLeaf\Exceptions\ValidationException;
 use Exception;
 
 final class Validator
@@ -138,7 +139,7 @@ final class Validator
     {
         foreach ($this->rulesToValidate as $rule) {
             if (!$rule->validate($value)) {
-                throw new Exception($rule->getError());
+                throw new ValidationException($rule->getError());
             }
         }
         return true;
