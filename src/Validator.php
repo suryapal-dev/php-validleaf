@@ -6,6 +6,11 @@ namespace SuryaByte\ValidLeaf;
 
 use SuryaByte\ValidLeaf\Rules\Interfaces\RuleInterface;
 use SuryaByte\ValidLeaf\Rules\EmailRule;
+use SuryaByte\ValidLeaf\Exceptions\RuleNotFoundException;
+use SuryaByte\ValidLeaf\Exceptions\RuleAlreadyExistedException;
+use SuryaByte\ValidLeaf\Exceptions\MethodNoArgumentNeededException;
+use SuryaByte\ValidLeaf\Exceptions\ArgumentRequiredForMethodException;
+use SuryaByte\ValidLeaf\Exceptions\ShouldValidateArgumentTypeException;
 use Exception;
 
 final class Validator
@@ -29,7 +34,7 @@ final class Validator
     private function getSavedRule(string $name): array
     {
         if (!isset($this->rules[$name])) {
-            throw new Exception("Invalid rule: $name");
+            throw new RuleNotFoundException($name);
         }
         return $this->rules[$name];
     }
@@ -45,7 +50,7 @@ final class Validator
     public function addRule(string $ruleName, RuleInterface $ruleClass, array $arguments = []): void
     {
         if ($this->rules[$ruleName] ?? null) {
-            throw new Exception("Already existed rule: $ruleName");
+            throw new RuleAlreadyExistedException($ruleName);
         }
         $this->rules[$ruleName] = [
             'class' => $ruleClass,
@@ -64,7 +69,7 @@ final class Validator
     private function arrangeRuleArguments(string $methodName, array $methodArguments, array $passedArguments): array
     {
         if (count($methodArguments) == 0) {
-            throw new Exception("No arguments needed for $methodName");
+            throw new MethodNoArgumentNeededException("No arguments needed for $methodName");
         }
 
         $arrangedArguments = [];
@@ -76,7 +81,7 @@ final class Validator
                 $value = $passedArguments[$methodArguments['name']];
             } else {
                 if ($methodArguments['is_required']) {
-                    throw new Exception("Argument {$methodArguments['name']} is required for $methodName");
+                    throw new ArgumentRequiredForMethodException($methodArguments['name'], $methodName);
                 }
                 $value = $methodArguments['default'] ?? null;
             }
@@ -99,7 +104,7 @@ final class Validator
         $mainArguments = [];
         if (!is_null($arguments['shouldValidate'] ?? null)) {
             if ('boolean' !== gettype($arguments['shouldValidate'])) {
-                throw new Exception("Argument shouldValidate passed in $name should be boolean.");
+                throw new ShouldValidateArgumentTypeException("Argument shouldValidate passed in $name should be boolean.");
             }
             $shouldValidate = $arguments['shouldValidate'];
             unset($arguments['shouldValidate']);
@@ -107,7 +112,7 @@ final class Validator
         if (true === $shouldValidate) {
             $rule = $this->getSavedRule($name);
             /**
-             * @var   \SuryaByte\ValidLeaf\Rules\Interfaces\RuleInterface
+             * @var \SuryaByte\ValidLeaf\Rules\Interfaces\RuleInterface
              */  
             $ruleClass = $rule['class'];
             if (count($arguments)) {
