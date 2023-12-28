@@ -6,6 +6,6 @@ namespace SuryaByte\ValidLeaf\Rules\Interfaces;
 
 interface RuleInterface
 {
-	public function validate(string|array|null|int|float $value): bool;
+	public function validate($value): bool;
     public function getError(): string;
 }
