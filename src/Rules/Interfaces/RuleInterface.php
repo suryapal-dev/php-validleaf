@@ -6,6 +6,15 @@ namespace SuryaByte\ValidLeaf\Rules\Interfaces;
 
 interface RuleInterface
 {
-	public function validate($value): bool;
+	/**
+	 * @param 	mixed	$value
+	 * 
+	 * @return	bool
+	 */
+	public function validate(mixed $value): bool;
+
+	/**
+	 * @return	string
+	 */
     public function getError(): string;
 }

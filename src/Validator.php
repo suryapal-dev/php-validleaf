@@ -10,10 +10,22 @@ use Exception;
 
 final class Validator
 {
-    private ?RuleFactory $ruleFactory;
+    /**
+     * @var array
+     */
     private array $rules = [];
+
+    /**
+     * @var array
+     */
     private array $rulesToValidate = [];
 
+    /**
+     * @param   string  $name
+     * 
+     * @return  array
+     * @throws  \Exception
+     */
     private function getSavedRule(string $name): array
     {
         if (!isset($this->rules[$name])) {
@@ -22,6 +34,14 @@ final class Validator
         return $this->rules[$name];
     }
 
+    /**
+     * @param   string                                              $ruleName
+     * @param   \SuryaByte\ValidLeaf\Rules\Interfaces\RuleInterface $ruleClass
+     * @param   array                                               $arguments
+     * 
+     * @return  void
+     * @throws  \Exception
+     */
     public function addRule(string $ruleName, RuleInterface $ruleClass, array $arguments = []): void
     {
         if ($this->rules[$ruleName] ?? null) {
@@ -33,6 +53,14 @@ final class Validator
         ];
     }
 
+    /**
+     * @param   string  $methodName
+     * @param   array   $methodArguments
+     * @param   array   $passedArguments
+     * 
+     * @return  array
+     * @throws  \Exception
+     */
     private function arrangeRuleArguments(string $methodName, array $methodArguments, array $passedArguments): array
     {
         if (count($methodArguments) == 0) {
@@ -58,7 +86,14 @@ final class Validator
         return $arrangedArguments;
     }
 
-    public function __call($name, $arguments): self
+    /**
+     * @param   string  $name
+     * @param   array   $arguments
+     * 
+     * @return  self
+     * @throws  \Exception
+     */
+    public function __call(string $name, array $arguments): self
     {
         $shouldValidate = true;
         $mainArguments = [];
@@ -71,8 +106,11 @@ final class Validator
         }
         if (true === $shouldValidate) {
             $rule = $this->getSavedRule($name);
+            /**
+             * @var   \SuryaByte\ValidLeaf\Rules\Interfaces\RuleInterface
+             */  
             $ruleClass = $rule['class'];
-            if ($arguments) {
+            if (count($arguments)) {
                 $arguments = $this->arrangeRuleArguments($name, $rule['arguments'], $arguments);
                 if (!method_exists($ruleClass, 'setArguments')) {
                     throw new Exception("$name class does not contain setArgument method, if you are working with extra arguments, you can apply these method. For more context, check the documentation.");
@@ -84,7 +122,13 @@ final class Validator
         return $this;
     }
 
-    public function validate($value): bool
+    /**
+     * @param   mixed   $value
+     * 
+     * @return  bool
+     * @throws  \Exception
+     */
+    public function validate(mixed $value): bool
     {
         foreach ($this->rulesToValidate as $rule) {
             if (!$rule->validate($value)) {
@@ -94,6 +138,9 @@ final class Validator
         return true;
     }
 
+    /**
+     * @return  void
+     */
     public function registerPredefinedRules(): void
     {
         $this->addRule('isEmail', new EmailRule());
