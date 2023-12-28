@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace SuryaByte\ValidLeaf\Rules;
 
 use SuryaByte\ValidLeaf\Rules\Interfaces\RuleInterface;
+use SuryaByte\ValidLeaf\Exceptions\ValidationException;
 
 class EmailRule implements RuleInterface
 {
     /**
-     * @param   mixed   $value
-     * 
-     * @return  bool
+     * @inheritdoc
      */
 	public function validate(mixed $value): bool
     {
@@ -19,10 +18,10 @@ class EmailRule implements RuleInterface
     }
 
     /**
-     * @return  string
+     * @inheritdoc
      */
-    public function getError(): string
+    public function getError(): ValidationException
     {
-        return 'The value is not a valid email address.';
+        throw new ValidationException('The value is not a valid email address.');
     }
 }
