@@ -13,7 +13,7 @@ class ValidationException extends Exception
     public function __construct(string $message = "Validation Error", array $errors = [])
     {
         $this->errors = $errors;
-        parent::__construct();
+        parent::__construct($message);
     }
 
     public function getErrors(): array
