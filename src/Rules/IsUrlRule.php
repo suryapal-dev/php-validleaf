@@ -18,7 +18,7 @@ class IsUrlRule extends RuleAbstract
      */
 	public function validate(mixed $value): bool
     {
-        if ('string' !== $value) {
+        if ('string' !== gettype($value)) {
             return false;
         }
         $url = filter_var($value, FILTER_VALIDATE_URL);
