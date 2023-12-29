@@ -14,6 +14,7 @@ use SuryaByte\ValidLeaf\Exceptions\ShouldValidateArgumentTypeException;
 use SuryaByte\ValidLeaf\Exceptions\SetArgumentMethodNotFoundException;
 use SuryaByte\ValidLeaf\Exceptions\ValidationException;
 use SuryaByte\ValidLeaf\Exceptions\UndefinedLevelPassedException;
+use SuryaByte\ValidLeaf\Exceptions\NoRulesToValidateException;
 use SuryaByte\ValidLeaf\Enums\ResponseLevel;
 
 final class Validator
@@ -150,9 +151,14 @@ final class Validator
     {
         $errors = [];
         $levelCheck = $this->tempResponseLevel ?? $this->responseLevel;
-        foreach ($this->rulesToValidate as $rule) {
+        if (count($this->rulesToValidate) == 0) {
+            throw new NoRulesToValidateException();
+        }
+        $tempRulesToValidate = $this->rulesToValidate;
+        $this->rulesToValidate = []; // set to default
+        $this->tempResponseLevel = null; // set to default
+        foreach ($tempRulesToValidate as $rule) {
             if (!$rule->validate($value)) {
-                $this->tempResponseLevel = null;
                 switch ($levelCheck) {
                     case ResponseLevel::ONLY_BOOLEAN->value:
                         return false;

@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use SuryaByte\ValidLeaf\ValidLeaf;
-use SuryaByte\ValidLeaf\RuleFactory;
 use SuryaByte\ValidLeaf\Exceptions\ValidationException;
 use SuryaByte\ValidLeaf\Enums\ResponseLevel;
 
