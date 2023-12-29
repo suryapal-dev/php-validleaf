@@ -15,6 +15,7 @@ use SuryaByte\ValidLeaf\Exceptions\SetArgumentMethodNotFoundException;
 use SuryaByte\ValidLeaf\Exceptions\ValidationException;
 use SuryaByte\ValidLeaf\Exceptions\UndefinedLevelPassedException;
 use SuryaByte\ValidLeaf\Exceptions\NoRulesToValidateException;
+use SuryaByte\ValidLeaf\Exceptions\DuplicateRuleAppliedException;
 use SuryaByte\ValidLeaf\Enums\ResponseLevel;
 
 final class Validator
@@ -129,6 +130,10 @@ final class Validator
              * @var \SuryaByte\ValidLeaf\Rules\RuleAbstract
              */  
             $ruleClass = $rule['class'];
+            if (in_array($ruleClass, $this->rulesToValidate)) {
+                $this->resetValidationAppliedRulesOrAnyTemporaryService();
+                throw new DuplicateRuleAppliedException($name);
+            }
             if (count($arguments)) {
                 $arguments = $this->arrangeRuleArguments($name, $rule['arguments'], $arguments);
                 if (!method_exists($ruleClass, 'setArguments')) {
@@ -142,6 +147,18 @@ final class Validator
     }
 
     /**
+     * @return  void
+     */
+    private function resetValidationAppliedRulesOrAnyTemporaryService(): void
+    {
+        if (count($this->rulesToValidate) == 0) {
+            throw new NoRulesToValidateException();
+        }
+        $this->rulesToValidate = []; // set to default
+        $this->tempResponseLevel = null; // set to default
+    }
+
+    /**
      * @param   mixed   $value
      * 
      * @return  bool
@@ -151,12 +168,8 @@ final class Validator
     {
         $errors = [];
         $levelCheck = $this->tempResponseLevel ?? $this->responseLevel;
-        if (count($this->rulesToValidate) == 0) {
-            throw new NoRulesToValidateException();
-        }
         $tempRulesToValidate = $this->rulesToValidate;
-        $this->rulesToValidate = []; // set to default
-        $this->tempResponseLevel = null; // set to default
+        $this->resetValidationAppliedRulesOrAnyTemporaryService();
         foreach ($tempRulesToValidate as $rule) {
             if (!$rule->validate($value)) {
                 switch ($levelCheck) {
