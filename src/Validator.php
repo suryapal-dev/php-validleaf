@@ -6,6 +6,7 @@ namespace SuryaByte\ValidLeaf;
 
 use SuryaByte\ValidLeaf\Rules\RuleAbstract;
 use SuryaByte\ValidLeaf\Rules\EmailRule;
+use SuryaByte\ValidLeaf\Rules\IsUrlRule;
 use SuryaByte\ValidLeaf\Exceptions\RuleNotFoundException;
 use SuryaByte\ValidLeaf\Exceptions\RuleAlreadyExistedException;
 use SuryaByte\ValidLeaf\Exceptions\MethodNoArgumentNeededException;
@@ -168,7 +169,7 @@ final class Validator
      * @return  bool
      * @throws  \Exception
      */
-    public function validate(mixed $value): bool
+    public function validate(mixed $value = null): bool
     {
         $errors = [];
         $levelCheck = $this->tempResponseLevel ?? $this->responseLevel;
@@ -200,7 +201,7 @@ final class Validator
      * 
      * @return  self
      */
-    public function setResponseLevel(ResponseLevel $level): self
+    public function setResponseLevel(ResponseLevel $level = ResponseLevel::ONLY_BOOLEAN): self
     {
         $this->responseLevel = $level->value;
         return $this;
@@ -211,7 +212,7 @@ final class Validator
      * 
      * @return  self
      */
-    public function setTemporaryResponseLevel(ResponseLevel $level): self
+    public function setTemporaryResponseLevel(ResponseLevel $level = ResponseLevel::ONLY_BOOLEAN): self
     {
         $this->tempResponseLevel = $level->value;
         return $this;
@@ -223,5 +224,6 @@ final class Validator
     public function registerPredefinedRules(): void
     {
         $this->addRule('isEmail', new EmailRule());
+        $this->addRule('isURL', new IsUrlRule());
     }
 }

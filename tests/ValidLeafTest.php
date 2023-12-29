@@ -18,3 +18,13 @@ it('should validate email', function () {
     $emailCheck = ValidLeaf::isEmail()->validate('test@test.test');
     expect($emailCheck)->toBeTrue();
 });
+
+it('invalidates as no value is passed', function () {
+    $emailCheck = ValidLeaf::isEmail()->validate();
+    expect($emailCheck)->toBeFalse();
+});
+
+it('invalidates as numeric value is passed', function () {
+    $emailCheck = ValidLeaf::isEmail()->validate(10);
+    expect($emailCheck)->toBeFalse();
+});
