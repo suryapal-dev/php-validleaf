@@ -28,7 +28,8 @@ composer test
 
 ## Available Methods
 
-1. `isEmail`
+1. `isEmail` - Validates whether the given input is Email.
+1. `isURL` - Validates whether the given input is URL.
 
 ## Usage
 
