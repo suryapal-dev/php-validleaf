@@ -8,4 +8,16 @@ use Exception;
 
 class ValidationException extends Exception
 {
+	private array $errors = [];
+
+    public function __construct(string $message = "Validation Error", array $errors = [])
+    {
+        $this->errors = $errors;
+        parent::__construct();
+    }
+
+    public function getErrors(): array
+    {
+        return $this->errors;
+    }
 }
