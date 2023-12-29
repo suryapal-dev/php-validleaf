@@ -224,6 +224,13 @@ final class Validator
     public function registerPredefinedRules(): void
     {
         $this->addRule('isEmail', new EmailRule());
-        $this->addRule('isURL', new IsUrlRule());
+
+        $this->addRule('isURL', new IsUrlRule(), [
+            'name' => 'haveScheme',
+            'is_required' => false,
+            'default' => false,
+            'format' => 'boolean',
+            'description' => 'Validate URL against scheme check.'
+        ]);
     }
 }
