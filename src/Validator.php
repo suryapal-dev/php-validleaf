@@ -14,7 +14,6 @@ use SuryaByte\ValidLeaf\Exceptions\ShouldValidateArgumentTypeException;
 use SuryaByte\ValidLeaf\Exceptions\SetArgumentMethodNotFoundException;
 use SuryaByte\ValidLeaf\Exceptions\ValidationException;
 use SuryaByte\ValidLeaf\Exceptions\UndefinedLevelPassedException;
-use SuryaByte\ValidLeaf\Exceptions\MultipleValidationException;
 use SuryaByte\ValidLeaf\Enums\ResponseLevel;
 
 final class Validator
@@ -168,7 +167,7 @@ final class Validator
             }
         }
         if (count($errors)) {
-            throw new MultipleValidationException($errors);
+            throw new ValidationException(errors: $errors);
         }
         return true;
     }
