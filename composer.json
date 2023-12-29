@@ -2,7 +2,6 @@
     "name": "suryabyte/php-validleaf",
     "description": "ValidLeaf is a package to validate given input based upon the type. It is for PHP projects, created with PHP.",
     "type": "library",
-    "version": "1.0.0",
     "license": "BSD-2-Clause",
     "homepage": "https://github.com/suryapal-dev/php-validleaf",
     "authors": [
