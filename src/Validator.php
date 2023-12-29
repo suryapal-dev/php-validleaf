@@ -71,6 +71,7 @@ final class Validator
             'class' => $ruleClass,
             'arguments' => $arguments,
         ];
+        return;
     }
 
     /**
@@ -83,7 +84,10 @@ final class Validator
      */
     private function arrangeRuleArguments(string $methodName, array $methodArguments, array $passedArguments): array
     {
-        if (count($methodArguments) == 0) {
+        if (
+            count($methodArguments) == 0
+            && count($passedArguments) > 0
+        ) {
             throw new MethodNoArgumentNeededException("No arguments needed for $methodName");
         }
 
@@ -95,6 +99,7 @@ final class Validator
             if (isset($passedArguments[$methodArguments['name']])) {
                 $value = $passedArguments[$methodArguments['name']];
             } else {
+
                 if ($methodArguments['is_required']) {
                     throw new ArgumentRequiredForMethodException($methodArguments['name'], $methodName);
                 }
@@ -116,7 +121,6 @@ final class Validator
     public function __call(string $name, array $arguments): self
     {
         $shouldValidate = true;
-        $mainArguments = [];
         if (!is_null($arguments['shouldValidate'] ?? null)) {
             if ('boolean' !== gettype($arguments['shouldValidate'])) {
                 throw new ShouldValidateArgumentTypeException("Argument shouldValidate passed in $name should be boolean.");
@@ -134,8 +138,8 @@ final class Validator
                 $this->resetValidationAppliedRulesOrAnyTemporaryService();
                 throw new DuplicateRuleAppliedException($name);
             }
+            $arguments = $this->arrangeRuleArguments($name, $rule['arguments'], $arguments);
             if (count($arguments)) {
-                $arguments = $this->arrangeRuleArguments($name, $rule['arguments'], $arguments);
                 if (!method_exists($ruleClass, 'setArguments')) {
                     throw new SetArgumentMethodNotFoundException($name);
                 }

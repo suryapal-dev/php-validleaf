@@ -15,6 +15,6 @@ class SetArgumentMethodNotFoundException extends Exception
 	 */
 	public function __construct(string $ruleName)
     {
-        parent::__construct("$ruleName class does not contain setArgument method, if you are working with extra arguments, you can apply these method. For more context, check the documentation.");
+        parent::__construct("$ruleName class does not contain setArguments method, if you are working with extra arguments, you can apply these method. For more context, check the documentation.");
     }
 }

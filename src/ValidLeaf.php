@@ -19,7 +19,7 @@ final class ValidLeaf
      * 
      * @return  \SuryaByte\ValidLeaf\Validator
      */
-    public static function __callStatic(string $name, array $arguments): Validator
+    public static function __callStatic(string $name, array $arguments): ?Validator
     {
         if (!self::$validator) {
             self::$validator = new Validator();
